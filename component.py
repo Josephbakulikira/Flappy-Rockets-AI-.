@@ -1,7 +1,8 @@
 import pygame 
 import os
-import neat 
+
 pygame.font.init()
+
 WIN_HEIGHT = 800
 WIN_WIDTH = 500
 
