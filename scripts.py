@@ -101,7 +101,7 @@ class Obstacle:
         win.blit(self.TOP_OBSTACLE, (self.x, self.top))
         win.blit(self.BOTTOM_OBSTACLE, (self.x, self.bottom))
 
-    def collide(self, rocket):
+    def collide(self, rocket, win):
         rocket_mask = rocket.get_mask()
         top_mask = pygame.mask.from_surface(self.TOP_OBSTACLE)
         bottom_mask = pygame.mask.from_surface(self.BOTTOM_OBSTACLE)
@@ -111,7 +111,7 @@ class Obstacle:
 
         b_point = rocket_mask.overlap(bottom_mask, bottom_offset)
         t_point = rocket_mask.overlap(top_mask, top_offset)
-        if t_point or b_point :
+        if b_point or t_point :
             return True
         return False
 
@@ -201,10 +201,13 @@ def main(genomes, config):
 
         rem =[]     
         add_obstacle = False 
+        print(len(rockets))
+        for obstacle in obstacles: 
+            obstacle.move() 
 
-        for obstacle in obstacles:  
-            for x, rocket in enumerate(rockets):  
-                if obstacle.collide(rocket):
+            for  x, rocket in enumerate(rockets):
+                  
+                if obstacle.collide(rocket, win):
                     ge[x].fitness -= 1
                     rockets.pop(x)
                     nets.pop(x)
@@ -218,7 +221,7 @@ def main(genomes, config):
             if obstacle.x + obstacle.TOP_OBSTACLE.get_width() < 0:
                     rem.append(obstacle)
 
-            obstacle.move()
+            
         
         if add_obstacle:
             score += 1
@@ -243,15 +246,15 @@ def main(genomes, config):
 def run(config_file):
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, config_file)
 
-    popul = neat.Population(config)
+    batu = neat.Population(config)
 
-    popul.add_reporter(neat.StdOutReporter(True))
+    batu.add_reporter(neat.StdOutReporter(True))
 
     stats = neat.StatisticsReporter()
     
-    popul.add_reporter(stats)
+    batu.add_reporter(stats)
     
-    winner = popul.run(main, 50)
+    winner = batu.run(main, 50)
 
 
 if __name__ == "__main__":
